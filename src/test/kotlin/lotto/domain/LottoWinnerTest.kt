@@ -31,7 +31,7 @@ class LottoWinnerTest {
     }
 
     companion object {
-        val DEFAULT_BONUS_NUMBER = LottoNumber(10)
+        private val DEFAULT_BONUS_NUMBER = LottoNumber(10)
         val DEFAULT_LOTTO_WINNER = LottoWinner(DEFAULT_LOTTO_TICKET, DEFAULT_BONUS_NUMBER)
     }
 }

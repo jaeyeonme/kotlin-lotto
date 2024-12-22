@@ -14,35 +14,35 @@ class LottoResultTest {
     @MethodSource("generate1stTicket")
     fun `1등 당첨 횟수 확인한다`(tickets: List<LottoTicket>) {
         val result = LottoResult(tickets, DEFAULT_LOTTO_WINNER, tickets.size)
-        result.first shouldBe tickets.size
+        result.rankMap[Rank.FIRST] shouldBe tickets.size
     }
 
     @ParameterizedTest
     @MethodSource("generate2ndTicket")
     fun `2등 당첨되었는지 확인한다`(tickets: List<LottoTicket>) {
         val result = LottoResult(tickets, DEFAULT_LOTTO_WINNER, tickets.size)
-        result.second shouldBe tickets.size
+        result.rankMap[Rank.SECOND] shouldBe tickets.size
     }
 
     @ParameterizedTest
     @MethodSource("generate3rdTicket")
     fun `3등 당첨되었는지 확인한다`(tickets: List<LottoTicket>) {
         val result = LottoResult(tickets, DEFAULT_LOTTO_WINNER, tickets.size)
-        result.third shouldBe tickets.size
+        result.rankMap[Rank.THIRD] shouldBe tickets.size
     }
 
     @ParameterizedTest
     @MethodSource("generate4thTicket")
     fun `4등 당첨되었는지 확인한다`(tickets: List<LottoTicket>) {
         val result = LottoResult(tickets, DEFAULT_LOTTO_WINNER, tickets.size)
-        result.fourth shouldBe tickets.size
+        result.rankMap[Rank.FOURTH] shouldBe tickets.size
     }
 
     @ParameterizedTest
     @MethodSource("generate5thTicket")
     fun `5등 당첨되었는지 확인한다`(tickets: List<LottoTicket>) {
         val result = LottoResult(tickets, DEFAULT_LOTTO_WINNER, tickets.size)
-        result.fifth shouldBe tickets.size
+        result.rankMap[Rank.FIFTH] shouldBe tickets.size
     }
 
     companion object {
