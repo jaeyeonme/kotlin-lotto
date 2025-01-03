@@ -1,7 +1,13 @@
 package lotto.model
 
-class Lottos private constructor(private val lottos: List<Lotto>) {
-    fun getLottos() = lottos
+class Lottos private constructor(
+    private val autoLottos: List<Lotto>,
+    private val manualLottos: List<Lotto>,
+) {
+    val lottos: List<Lotto> = (autoLottos + manualLottos).toList()
+        get() = field.toList()
+
+    fun calculatePurchaseAmount(): Int = lottos.size * PRICE
 
     fun countMatchingLottoNumbers(winningNumbers: WinningNumbers): LottoMatchStatistic {
         val winningNumberList = winningNumbers.winnigLottoNumbers
@@ -27,10 +33,40 @@ class Lottos private constructor(private val lottos: List<Lotto>) {
     private fun isWinningPrize(it: LottoPrize) = it != LottoPrize.NONE
 
     companion object {
+        private const val PRICE = 1000
+
         private const val BONUS_MATCH_COUNT = 5
 
-        fun fromCountInAuto(count: Int): Lottos = from(List(count) { Lotto.fromAuto() })
+        fun from(
+            autoCount: Int = 0,
+            manualLottoNumbers: List<List<Int>> = emptyList(),
+        ): Lottos =
+            Lottos(
+                autoLottos = generateLottosInAuto(autoCount),
+                manualLottos = generateLottosInManual(manualLottoNumbers),
+            )
 
-        fun from(lottos: List<Lotto>) = Lottos(lottos)
+        private fun generateLottosInAuto(autoCount: Int): List<Lotto> {
+            require(autoCount >= 0) { "로또 개수는 양수여야 합니다." }
+            return List(autoCount) { Lotto.fromAuto() }
+        }
+
+        private fun generateLottosInManual(lottoNumbers: List<List<Int>>): List<Lotto> = lottoNumbers.map { Lotto.from(it) }
+
+        fun calculateAutoLottoCount(
+            purchaseAmount: Int,
+            manualLottoCount: Int,
+        ): Int {
+            val totalLottoCount = calculateLottoCount(purchaseAmount)
+            val autoLottoCount = totalLottoCount - manualLottoCount
+
+            require(autoLottoCount >= 0) { "구매할 수 있는 로또의 개수를 넘었습니다." }
+            return autoLottoCount
+        }
+
+        private fun calculateLottoCount(purchaseAmount: Int): Int {
+            require(purchaseAmount > 0) { "금액은 양수입니다." }
+            return purchaseAmount / PRICE
+        }
     }
 }
