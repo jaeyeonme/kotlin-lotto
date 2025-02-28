@@ -1,8 +1,8 @@
 package lotto.application
 
-import lotto.Lotto
-import lotto.LottoResult
-import lotto.LottoVendingMachine
+import lotto.domain.Lotto
+import lotto.domain.LottoNumber
+import lotto.domain.Lottos
 import lotto.view.InputView
 import lotto.view.OutputView
 
@@ -12,18 +12,17 @@ class LottoApplication(
 ) {
 
     fun run() {
-        outputView.showInputMoneyMessage()
         val money = inputView.inputMoney()
-        val lotto = LottoVendingMachine.buyLotto(money)
+        val lotto = Lottos.buyLotto(money)
         outputView.showLottoCount(lotto)
         outputView.showLotto(lotto)
 
-        outputView.showInputWinningNumbersMessage()
-        val winningNumbers: List<Int> = inputView.inputWinningNumbers()
+        val winningLotto: Lotto = inputView.inputWinningNumbers()
+        val bonusNumber: LottoNumber = inputView.inputBonusNumber()
 
-        val lottoResult= LottoResult.makeLottoResult(
-            winningLotto = Lotto(*winningNumbers.toIntArray()),
-            lottos = lotto,
+        val lottoResult = lotto.getResult(
+            winningLotto = winningLotto,
+            bonusLottoNumber = bonusNumber
         )
         outputView.showResult(lottoResult, money)
     }

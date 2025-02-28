@@ -1,26 +1,25 @@
 package lotto.view
 
-import lotto.Lotto
-import lotto.LottoResult
-import lotto.Prize
+import lotto.domain.LottoResult
+import lotto.domain.Lottos
+import lotto.domain.Prize
 
 class OutputView {
-    fun showInputMoneyMessage() {
-        println("구입금액을 입력해 주세요.")
+    fun showLottoCount(lottos: Lottos) {
+        val size = lottos.lottos
+            .size
+        println("${size}개를 구매했습니다.")
     }
 
-    fun showLottoCount(lotto: List<Lotto>) {
-        println("${lotto.size}개를 구매했습니다.")
-    }
-
-    fun showLotto(lotto: List<Lotto>) {
-        lotto.forEach {
-            println(it)
-        }
-    }
-
-    fun showInputWinningNumbersMessage() {
-        println("지난 주 당첨 번호를 입력해 주세요.")
+    fun showLotto(lottos: Lottos) {
+        lottos.lottos
+            .forEach {
+                println(
+                    "[${
+                        it.lottoNumbers.map { lottoNumber -> lottoNumber.number }
+                            .joinToString(", ")
+                    }]")
+            }
     }
 
     fun showResult(lottoResult: LottoResult, money: Int) {
@@ -28,9 +27,14 @@ class OutputView {
         println("---------")
         Prize.entries
             .filter { it != Prize.NONE }
-            .sortedByDescending { it.count }
+            .reversed()
             .forEach { prize ->
-                println("${prize.count}개 일치 (${prize.money}원) - ${lottoResult[prize]}개")
+                val title = if (prize == Prize.SECOND) {
+                    "${prize.count}개 일치, 보너스 볼 일치 (${prize.money}원)"
+                } else {
+                    "${prize.count}개 일치 (${prize.money}원)"
+                }
+                println("$title - ${lottoResult[prize]}개")
             }
 
         println(String.format("총 수익률은 %.2f입니다.", lottoResult.getRateOfReturn(money)))

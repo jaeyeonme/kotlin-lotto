@@ -1,40 +1,61 @@
 package lotto
 
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
+import lotto.domain.Lotto
+import lotto.domain.LottoNumber
+import lotto.domain.Lottos
+import lotto.domain.Prize
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.MethodSource
 
 class LottoResultTest {
-
-    @Test
-    internal fun `구매한 로또와 결과가 일치`() {
+    @ParameterizedTest
+    @MethodSource("provideLottoTestCases")
+    internal fun `로또 결과 테스트`(testCase: TestCase) {
         val winningLotto = Lotto(1, 2, 3, 4, 5, 6)
+        val bonusLottoNumber = LottoNumber(7)
 
-        val lottos = mutableListOf<Lotto>().apply {
-            add(Lotto(8, 21, 23, 41, 42, 43))
-            add(Lotto(3, 5, 11, 16, 32, 38))
-            add(Lotto(7, 11, 16, 35, 36, 44))
-            add(Lotto(1, 8, 11, 31, 41, 42))
-            add(Lotto(13, 14, 16, 38, 42, 45))
-            add(Lotto(7, 11, 30, 40, 42, 43))
-            add(Lotto(2, 13, 22, 32, 38, 45))
-            add(Lotto(23, 25, 33, 36, 39, 41))
-            add(Lotto(1, 3, 5, 14, 22, 45))
-            add(Lotto(5, 9, 38, 41, 43, 44))
-            add(Lotto(2, 8, 9, 18, 19, 21))
-            add(Lotto(13, 14, 18, 21, 23, 35))
-            add(Lotto(17, 21, 29, 37, 42, 45))
-            add(Lotto(3, 8, 27, 30, 35, 44))
-        }
-
-        val lottoResult = LottoResult.makeLottoResult(
+        val lottoResult = testCase.lottos.getResult(
             winningLotto = winningLotto,
-            lottos = lottos
+            bonusLottoNumber = bonusLottoNumber
         )
 
-        lottoResult[Prize.FIRST] shouldBe 0
-        lottoResult[Prize.SECOND] shouldBe 0
-        lottoResult[Prize.THIRD] shouldBe 0
-        lottoResult[Prize.FOURTH] shouldBe 1
-        lottoResult[Prize.NONE] shouldBe 13
+        lottoResult[testCase.expectedPrize] shouldBe 1
     }
+
+    data class TestCase(
+        val lottos: Lottos,
+        val expectedPrize: Prize
+    )
+
+    companion object {
+        @JvmStatic
+        fun provideLottoTestCases() = listOf(
+            TestCase(
+                lottos = Lottos(listOf(Lotto(1, 2, 3, 4, 5, 6))),
+                expectedPrize = Prize.FIRST
+            ),
+            TestCase(
+                lottos = Lottos(listOf(Lotto(1, 2, 3, 4, 5, 7))),
+                expectedPrize = Prize.SECOND
+            ),
+            TestCase(
+                lottos = Lottos(listOf(Lotto(1, 2, 3, 4, 5, 8))),
+                expectedPrize = Prize.THIRD
+            ),
+            TestCase(
+                lottos = Lottos(listOf(Lotto(1, 2, 3, 4, 8, 9))),
+                expectedPrize = Prize.FOURTH
+            ),
+            TestCase(
+                lottos = Lottos(listOf(Lotto(1, 2, 3, 8, 9, 10))),
+                expectedPrize = Prize.FIFTH
+            ),
+            TestCase(
+                lottos = Lottos(listOf(Lotto(1, 2, 8, 9, 10, 11))),
+                expectedPrize = Prize.NONE
+            )
+        )
+    }
+
 }
