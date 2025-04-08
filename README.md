@@ -6,3 +6,13 @@
 - [x] Parse custom delimiters between // and \n
 - [x] Return sum of the numbers
 - [x] Check edge case and fix errors
+
+## Step2 - Lotto (Auto)
+
+- [x] Enter the purchase amount
+- [x] Count the amount of ticket I purchased
+- [x] Generate tickets (6 numbers per ticket) and print out them
+- [x] Enter the last week's winning number
+- [x] Compare winning number and number of all tickets to find matches
+- [x] Print winning statistics and return rate
+- [x] Check edge case and fix errors
