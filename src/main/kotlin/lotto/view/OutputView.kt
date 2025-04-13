@@ -1,35 +1,36 @@
 package lotto.view
 
 import lotto.domain.Lottery
-import lotto.domain.Lotto
+import lotto.domain.Lottos
 import lotto.domain.Prize
 
 object OutputView {
-    fun printLottos(lottos: List<Lotto>) {
+    fun printLottos(lottos: Lottos) {
         println("You have purchased ${lottos.size} tickets.")
-        lottos.forEach {
+        lottos.values.forEach {
             println("[${it.rawNumbers.joinToString()}]")
         }
     }
 
     fun printWinningStatistics(lottery: Lottery) {
-        println("\nWinning Statistics\n------------------")
-        lottery.result.entries.sortedBy { it.key.value }
-            .filterNot { it.key == Prize.NONE }
-            .forEach { (prize, count) -> printPrize(prize, count) }
+        val result =
+            buildString {
+                append("\nWinning Statistics\n------------------\n")
+                appendPrizes(lottery)
+                append("Total return rate is %.2f (A rate below 1 means a loss)".format(lottery.returnRate))
+            }
 
-        println("Total return rate is %.2f (A rate below 1 means a loss)".format(lottery.returnRate))
+        println(result)
     }
 
-    private fun printPrize(
-        prize: Prize,
-        count: Int,
-    ) {
-        if (prize == Prize.SECOND) {
-            println("${prize.matchCount} Matches + Bonus Ball (${prize.value.toMoneyExpression()} KRW) - $count tickets")
-            return
-        }
-        println("${prize.matchCount} Matches (${prize.value.toMoneyExpression()} KRW) - $count tickets")
+    private fun StringBuilder.appendPrizes(lottery: Lottery) {
+        lottery.result.entries.sortedBy { it.key.value }
+            .filterNot { it.key == Prize.NONE }
+            .forEach { (prize, count) ->
+                append("${prize.matchCount} Matches")
+                if (prize == Prize.SECOND) append(" + Bonus Ball")
+                append(" (${prize.value.toMoneyExpression()} KRW) - $count tickets\n")
+            }
     }
 
     private fun Int.toMoneyExpression(): String {

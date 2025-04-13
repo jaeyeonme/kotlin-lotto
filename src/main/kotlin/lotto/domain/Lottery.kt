@@ -1,25 +1,22 @@
 package lotto.domain
 
 import lotto.domain.LottoMachine.Companion.LOTTO_PRICE
-import java.math.BigDecimal
 
 class Lottery(
-    lottos: List<Lotto>,
+    lottos: Lottos,
     winningLotto: Lotto,
     bonusNumber: LottoNumber,
 ) {
     private val prizes: List<Prize> =
-        lottos.map { lotto ->
-            Prize.calculate(winningLotto.compareMatches(lotto), lotto.contains(bonusNumber))
-        }
+        lottos
+            .compareAllTo(winningLotto)
+            .map { Prize.calculate(it.value, it.key.contains(bonusNumber)) }
 
     val result =
         Prize.entries.associateWith {
             prizes.count { prize -> it == prize }
         }
 
-    val returnRate: BigDecimal =
-        prizes.sumOf { it.value }
-            .toBigDecimal()
-            .divide(lottos.size.times(LOTTO_PRICE).toBigDecimal())
+    val returnRate: Double =
+        prizes.sumOf { it.value }.toDouble() / (lottos.size * LOTTO_PRICE)
 }

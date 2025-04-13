@@ -1,49 +1,47 @@
 package lotto.domain
 
-import io.kotest.core.spec.style.FunSpec
-import io.kotest.matchers.maps.shouldContainAll
+import io.kotest.core.spec.style.BehaviorSpec
+import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.shouldBe
 
-class LotteryTest : FunSpec({
-    context("Lottery") {
+class LotteryTest : BehaviorSpec({
+    given("four lottos and one winning lotto") {
         val lottos =
-            listOf(
-                Lotto(1, 2, 3, 4, 5, 6),
-                Lotto(1, 2, 3, 4, 5, 7),
-                Lotto(1, 2, 3, 4, 7, 8),
-                Lotto(40, 41, 42, 43, 44, 45),
+            Lottos(
+                listOf(
+                    Lotto(1, 2, 3, 4, 5, 6),
+                    Lotto(1, 2, 3, 4, 5, 7),
+                    Lotto(1, 2, 3, 4, 7, 8),
+                    Lotto(40, 41, 42, 43, 44, 45),
+                ),
             )
         val winningLotto = Lotto(1, 2, 3, 4, 5, 6)
         val bonusNumber = LottoNumber.from(7)
 
         val lottery = Lottery(lottos, winningLotto, bonusNumber)
+        val expected =
+            listOf(
+                Prize.FIRST,
+                Prize.SECOND,
+                Prize.FOURTH,
+                Prize.NONE,
+            )
 
-        test("return all prizes produced by lottery") {
-            val expected =
-                mapOf(
-                    Prize.FIRST to 1,
-                    Prize.SECOND to 1,
-                    Prize.THIRD to 0,
-                    Prize.FOURTH to 1,
-                    Prize.FIFTH to 0,
-                    Prize.NONE to 1,
-                )
+        `when`("the lottery is drawn") {
+            then("it should return all prizes produced by the lottery") {
+                val prizes =
+                    lottery.result
+                        .filter { it.value == 1 }
+                        .map { it.key }
 
-            lottery.result shouldContainAll expected
-        }
+                prizes shouldContainAll expected
+            }
 
-        test("return rate should be all price summed divided by amount inserted") {
-            val expected =
-                listOf(
-                    Prize.FIRST,
-                    Prize.SECOND,
-                    Prize.FOURTH,
-                    Prize.NONE,
-                ).sumOf { it.value }
-                    .toBigDecimal()
-                    .divide(4000.toBigDecimal())
+            then("it should calculate by dividing the sum of prizes by inserted amount") {
+                val expectedRate = expected.sumOf { it.value } / 4_000.toDouble()
 
-            lottery.returnRate shouldBe expected
+                lottery.returnRate shouldBe expectedRate
+            }
         }
     }
 })

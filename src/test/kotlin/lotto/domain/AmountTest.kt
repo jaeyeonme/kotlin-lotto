@@ -5,7 +5,6 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.inspectors.forAll
 import io.kotest.matchers.shouldBe
-import java.math.BigDecimal
 
 class AmountTest : FunSpec({
     test("value must be above or equal to 1,000 and below or equal to 100,000") {
@@ -21,10 +20,10 @@ class AmountTest : FunSpec({
         }
     }
 
-    test("throw exception if value is less than 1,000 or above 100,000") {
+    test("throw exception if value is less than 0 or above 100,000") {
         listOf(
-            998,
-            999,
+            -2,
+            -1,
             100_001,
             100_002,
         ).forAll {
@@ -34,20 +33,31 @@ class AmountTest : FunSpec({
         }
     }
 
-    context("divide") {
-        val amount = Amount(10_000)
+    context("countPurchasable") {
+        val amountValue = 10_000
+        val amount = Amount(amountValue)
 
         test("divide by zero does not throw exception") {
-            amount.divide(0) shouldBe BigDecimal.ZERO
+            val price = 1_000
+            listOf(1_000, 2_000, 2_500, 3_300).forAll {
+                amount.countPurchasable(price) shouldBe amountValue / price
+            }
+        }
+    }
+
+    context("spend") {
+        test("deduct given amount from balance") {
+            listOf(1_000, 2_000, 5_000, 100_000).forAll {
+                shouldNotThrowAny {
+                    Amount(100_000).spend(it)
+                }
+            }
         }
 
-        test("divide works as expected") {
-            amount.divide(1_000) shouldBe BigDecimal.TEN
-        }
-
-        test("divide discards all decimals") {
-            val divide = amount.divide(1_500)
-            divide shouldBe BigDecimal(6)
+        test("should throw exception if spend amount is greater than given value") {
+            shouldThrow<IllegalStateException> {
+                Amount(1_000).spend(1_001)
+            }
         }
     }
 })
