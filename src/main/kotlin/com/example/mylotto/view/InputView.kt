@@ -40,4 +40,12 @@ class InputView {
         require(numbers != null)
         return numbers
     }
+
+    // 보너스볼 입력받는 함수
+    fun readBonusNumber(): Int {
+        println("보너스 볼을 입력해 주세요.")
+        val bonusNumber = readlnOrNull()?.toIntOrNull()
+        require(bonusNumber != null)
+        return bonusNumber
+    }
 }

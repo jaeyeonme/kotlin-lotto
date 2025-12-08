@@ -22,11 +22,16 @@ class LottoService {
         }
     }
 
+    // LottoTicket 당첨 결과 확인
     fun matchLottoTicket(
         lottoTicket: LottoTicket,
         winningNumbers: LottoWinningNumbers,
     ): Rank {
-        val matchedCount = lottoTicket.numbers.intersect(winningNumbers.numbers).size
-        return Rank.valueOf(matchedCount)
+        // matchCount 계산 시 WinningNumber의 보너스볼을 반영하여 Rank 계산
+        val matchedNumbers = lottoTicket.numbers.intersect(winningNumbers.numbers)
+        val matchedCount = matchedNumbers.size
+        val hasBonusNumber = lottoTicket.numbers.contains(winningNumbers.bonusNumber)
+
+        return Rank.valueOf(matchedCount, hasBonusNumber)
     }
 }

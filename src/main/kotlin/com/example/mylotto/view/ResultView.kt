@@ -30,6 +30,12 @@ class ResultView {
             .sortedBy { it.winningMoney }
             .forEach { rank ->
                 val count = result.rankCountMap.getOrDefault(rank, 0)
+
+                if (rank == Rank.SECOND) {
+                    println("${rank.countOfMatch}개 일치, 보너스 볼 일치 (${rank.winningMoney}원)- ${count}개")
+                    return@forEach
+                }
+
                 println("${rank.countOfMatch}개 일치 (${rank.winningMoney}원)- ${count}개")
             }
 

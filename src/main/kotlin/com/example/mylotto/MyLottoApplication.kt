@@ -5,7 +5,7 @@ import com.example.mylotto.model.LottoResult
 import com.example.mylotto.model.LottoTicket
 import com.example.mylotto.model.LottoWinningNumbers
 import com.example.mylotto.service.LottoService
-import com.example.mylotto.service.LottoTicketVerifier
+import com.example.mylotto.service.LottoVerifier
 import com.example.mylotto.view.InputView
 import com.example.mylotto.view.ResultView
 
@@ -17,7 +17,7 @@ fun main() {
 
 fun doLotto() {
     val lottoService = LottoService()
-    var lottoTicketVerifier = LottoTicketVerifier()
+    var lottoVerifier = LottoVerifier()
     val inputView = InputView()
     val resultView = ResultView()
 
@@ -27,7 +27,7 @@ fun doLotto() {
     while (true) {
         try {
             val purchaseAmount = inputView.readPurchaseAmount()
-            lottoTicketVerifier.verifyPurchaseAmount(purchaseAmount);
+            lottoVerifier.verifyPurchaseAmount(purchaseAmount);
 
             // 수동으로 구매할 로또 수 입력받기
             val manualLottoCount = inputView.readManualLottoCount()
@@ -52,9 +52,15 @@ fun doLotto() {
 
     while (true) {
         try {
+
+            // 지난 주 당첨 번호와 보너스볼 입력
+            val inputWinningNumbers = inputView.readWinningNumbers()
+            val bonusNumber = inputView.readBonusNumber()
+
+            // 지난 주 당첨 번호와 보너스볼을 기반으로 WinningNumbers 객체 생성
             val winningNumbers: LottoWinningNumbers = LottoWinningNumbers.of(
-                inputView.readWinningNumbers()
-                    .map(::LottoNumber)
+                inputWinningNumbers.map { number -> LottoNumber(number) },
+                LottoNumber(bonusNumber)
             )
 
             // manual 과 automatic 을 함께 처리

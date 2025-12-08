@@ -69,4 +69,35 @@ class LottoServiceTest :
                 }
             }
         }
+
+        // 보너스볼을 고려한 SECOND 당첨 테스트코드
+        given("a lotto ticket and winning numbers with bonus") {
+            `when`("matching a single ticket") {
+                then("it should calculate the correct rank including bonus for each ticket") {
+                    forAll(
+                        row(
+                            setOf(3, 11, 15, 29, 35, 7),
+                            listOf(3, 11, 15, 29, 35, 44),
+                            LottoNumber(7),
+                            Rank.SECOND,
+                        ),
+                        row(
+                            setOf(3, 11, 15, 29, 10, 7),
+                            listOf(3, 11, 15, 29, 35, 44),
+                            LottoNumber(7),
+                            Rank.FOURTH,
+                        ),
+                    ) { ticketNumbers, winningNumbers, bonusNumber, expectedRank ->
+                        val testTicket = LottoTicket(ticketNumbers.map { LottoNumber(it) }.toSet())
+                        val testWinningNumbers = LottoWinningNumbers.of(winningNumbers.map { LottoNumber(it) }, bonusNumber)
+
+                        val matchedCount = testTicket.numbers.intersect(testWinningNumbers.numbers).size
+                        val matchBonus = testTicket.numbers.contains(bonusNumber)
+                        val actualRank = Rank.valueOf(matchedCount, matchBonus)
+
+                        actualRank.shouldBe(expectedRank)
+                    }
+                }
+            }
+        }
     })

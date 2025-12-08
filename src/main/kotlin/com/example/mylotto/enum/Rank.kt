@@ -5,20 +5,25 @@ enum class Rank(
     val winningMoney: Int,
 ) {
     FIRST(6, 2_000_000_000),
-    THIRD(5, 1_500_000),
+    SECOND(5, 30_000_000), // 5개 + 보너스
+    THIRD(5, 1_500_000),   // 5개 (보너스 없음)
     FOURTH(4, 50_000),
     FIFTH(3, 5_000),
     MISS(0, 0),
     ;
 
     companion object {
-        fun valueOf(countOfMatch: Int): Rank =
-            when (countOfMatch) {
-                6 -> FIRST
-                5 -> THIRD
-                4 -> FOURTH
-                3 -> FIFTH
+        fun valueOf(countOfMatch: Int, matchBonus: Boolean): Rank =
+            when {
+                countOfMatch == 6 -> FIRST
+                countOfMatch == 5 && matchBonus -> SECOND
+                countOfMatch == 5 -> THIRD
+                countOfMatch == 4 -> FOURTH
+                countOfMatch == 3 -> FIFTH
                 else -> MISS
             }
+
+        fun valueOf(countOfMatch: Int): Rank =
+            valueOf(countOfMatch, false)
     }
 }
