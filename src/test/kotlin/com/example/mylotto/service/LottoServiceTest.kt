@@ -38,31 +38,36 @@ class LottoServiceTest :
                         row(
                             setOf(3, 11, 15, 29, 35, 44),
                             listOf(3, 11, 15, 29, 35, 44),
+                            LottoNumber(45),
                             Rank.FIRST,
                         ),
                         row(
                             setOf(3, 11, 15, 29, 35, 7),
                             listOf(3, 11, 15, 29, 35, 44),
+                            LottoNumber(45),
                             Rank.THIRD,
                         ),
                         row(
                             setOf(3, 11, 15, 29, 10, 7),
                             listOf(3, 11, 15, 29, 35, 44),
+                            LottoNumber(45),
                             Rank.FOURTH,
                         ),
                         row(
                             setOf(3, 11, 15, 6, 10, 7),
                             listOf(3, 11, 15, 29, 35, 44),
+                            LottoNumber(45),
                             Rank.FIFTH,
                         ),
                         row(
                             setOf(1, 2, 4, 6, 8, 10),
                             listOf(3, 11, 15, 29, 35, 44),
+                            LottoNumber(45),
                             Rank.MISS,
                         ),
-                    ) { ticketNumbers, winningNumbers, expectedRank ->
+                    ) { ticketNumbers, winningNumbers, bonusNumber, expectedRank ->
                         val testTicket = LottoTicket(ticketNumbers.map { LottoNumber(it) }.toSet())
-                        val testWinningNumbers = LottoWinningNumbers.of(winningNumbers.map { LottoNumber(it) })
+                        val testWinningNumbers = LottoWinningNumbers.of(winningNumbers.map { LottoNumber(it) }, bonusNumber)
 
                         lottoService.matchLottoTicket(testTicket, testWinningNumbers).shouldBe(expectedRank)
                     }
