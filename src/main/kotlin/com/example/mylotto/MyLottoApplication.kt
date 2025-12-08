@@ -24,6 +24,20 @@ fun doLotto() {
     while (true) {
         try {
             val purchaseAmount = inputView.readPurchaseAmount()
+
+            // 몇개를 구매할 수 있는지 로그 출력
+            println("총 ${purchaseAmount / 1000}개 구매가능")
+
+            // 수동으로 구매할 로또 수 입력받기
+            val manualLottoCount = inputView.readManualLottoCount()
+
+            // 수동으로 구매할 로또가 없는 경우 자동으로 처리
+            val manualLottoNumbers = if (manualLottoCount > 0) {
+                inputView.readManualLottoNumbers(manualLottoCount)
+            } else {
+                emptyList()
+            }
+
             lottoTickets = lottoService.generateLottoTickets(purchaseAmount)
             resultView.displayPurchasedTickets(lottoTickets)
             break
