@@ -17,7 +17,7 @@ class LottoServiceTest :
         given("a purchase amount") {
             `when`("it is 5000 won") {
                 then("it should generate 5 lotto tickets") {
-                    val tickets = lottoService.generateLottoTickets(5000)
+                    val tickets = lottoService.generateAutomaticLottoTickets(5000)
                     tickets.size.shouldBe(5)
                 }
             }
@@ -25,7 +25,7 @@ class LottoServiceTest :
             `when`("it is not a multiple of 1000") {
                 then("it should throw an exception") {
                     shouldThrow<IllegalArgumentException> {
-                        lottoService.generateLottoTickets(1500)
+                        lottoService.generateAutomaticLottoTickets(1500)
                     }
                 }
             }

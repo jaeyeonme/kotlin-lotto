@@ -5,9 +5,15 @@ import com.example.mylotto.model.LottoResult
 import com.example.mylotto.model.LottoTicket
 
 class ResultView {
-    fun displayPurchasedTickets(tickets: List<LottoTicket>) {
-        println("${tickets.size}개를 구매했습니다.")
-        tickets.forEach { ticket ->
+    fun displayPurchasedTickets(
+        manualTickets: List<LottoTicket>,
+        automaticTickets: List<LottoTicket>)
+    {
+        println("수동으로 ${manualTickets.size}, 자동으로 ${automaticTickets.size}개를 구매했습니다.")
+        manualTickets.forEach { ticket ->
+            println(ticket.numbers.joinToString(prefix = "[", postfix = "]") { it.number.toString() })
+        }
+        automaticTickets.forEach { ticket ->
             println(ticket.numbers.joinToString(prefix = "[", postfix = "]") { it.number.toString() })
         }
 
