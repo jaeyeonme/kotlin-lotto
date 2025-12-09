@@ -2,27 +2,27 @@ package lotto
 
 class WinLotto {
     val winLotto: Lotto
+    val bonusBall: LottoNumber
 
-    constructor(input: String?) {
-        if (input.isNullOrBlank()) throw IllegalArgumentException("뭐라도 입력하세요")
+    constructor(winLotto: String?, bonusBall: String?) {
+        require(!winLotto.isNullOrBlank()) { "당첨 번호를 입력하세요" }
+        require(!bonusBall.isNullOrBlank()) { "보너스볼을 입력하세요" }
 
-        val splitted = splitToSix(input)
-
-        splitted.forEach { if (!it.matches("^\\d+$".toRegex())) throw IllegalArgumentException("올바른 숫자를 입력하세요 (입력 : $it)") }
-
-        val numbers = splitted.map { it.toInt() }
-        this.winLotto = Lotto(numbers)
-    }
-
-    private fun splitToSix(input: String): List<String> {
-        val splitted = input.trim().split(" ")
-        if (splitted.distinct().size != Lotto.LOTTO_NUMBER_COUNT) {
-            throw IllegalArgumentException("$Lotto.LOTTO_NUMBER_COUNT 개의 서로 다른 숫자를 입력하세요")
-        }
-        return splitted
+        this.winLotto = Lotto.ofManual(winLotto)
+        this.bonusBall = validateBonusBall(bonusBall)
     }
 
     fun matchCount(lotto: Lotto): Int {
         return winLotto.numbers.intersect(lotto.numbers.toSet()).size
+    }
+
+    fun matchBonusBall(lotto: Lotto): Boolean {
+        return lotto.numbers.contains(bonusBall)
+    }
+
+    private fun validateBonusBall(bonusBall: String): LottoNumber {
+        val bonusBallNumber = LottoNumber(bonusBall.toInt())
+        require(bonusBallNumber !in winLotto.numbers) { "보너스볼은 당첨 번호와 겹치지 않게 선택해주세요" }
+        return bonusBallNumber
     }
 }

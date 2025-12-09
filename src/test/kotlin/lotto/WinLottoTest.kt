@@ -6,24 +6,17 @@ import io.kotest.matchers.shouldBe
 
 class WinLottoTest : FreeSpec({
 
-    "문자가 포함된 경우 예외 발생" {
-        val exception =
-            shouldThrow<IllegalArgumentException> { WinLotto("1 2 3 4 5 육") }
-        exception.message shouldBe "올바른 숫자를 입력하세요"
-    }
-    "1보다 작거나 45보다 큰 숫자가 포함된 경우 예외 발생" {
-        val exception =
-            shouldThrow<IllegalArgumentException> { WinLotto("0 2 3 4 5 46") }
-        exception.message shouldBe "1부터 45까지의 숫자를 입력하세요"
-    }
-    "5개의 숫자를 입력하는 경우 예외 발생" {
-        val exception =
-            shouldThrow<IllegalArgumentException> { WinLotto("2 4 6 8 10") }
-        exception.message shouldBe "6개의 서로 다른 숫자를 입력하세요"
-    }
-    "6개 숫자 간 중복이 있는 경우" {
-        val exception =
-            shouldThrow<IllegalArgumentException> { WinLotto("2 4 6 8 10 2") }
-        exception.message shouldBe "6개의 서로 다른 숫자를 입력하세요"
+    "보너스볼 유효성체크" - {
+        "당첨 번호와 보너스볼이 겹치면 예외가 발생한다" {
+            val exception =
+                shouldThrow<IllegalArgumentException> { WinLotto("1, 2, 3, 4, 5, 6", "1") }
+            exception.message shouldBe "보너스볼은 당첨 번호와 겹치지 않게 선택해주세요"
+        }
+
+        "보너스볼이 ${LottoNumber.MINIMUM_LOTTO_NUMBER} ~ ${LottoNumber.MAXIMUM_LOTTO_NUMBER} 사이 숫자가 아닌 경우" {
+            val exception =
+                shouldThrow<IllegalArgumentException> { WinLotto("1, 2, 3, 4, 5, 6", "46") }
+            exception.message shouldBe "1부터 45까지의 숫자를 입력하세요"
+        }
     }
 })

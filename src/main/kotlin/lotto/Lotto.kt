@@ -1,26 +1,31 @@
 package lotto
 
-
-class Lotto(input: List<Int>) {
-    val numbers = input
-
+class Lotto(val numbers: List<LottoNumber>) {
     companion object {
-        const val MINIMUM_LOTTO_NUMBER = 1
-        const val MAXIMUM_LOTTO_NUMBER = 45
         const val LOTTO_NUMBER_COUNT = 6
 
-    }
+        fun ofAuto(): Lotto {
+            val numbers =
+                (LottoNumber.MINIMUM_LOTTO_NUMBER..LottoNumber.MAXIMUM_LOTTO_NUMBER)
+                    .toList()
+                    .shuffled()
+                    .take(LOTTO_NUMBER_COUNT)
+                    .map { LottoNumber(it) }
+            return Lotto(numbers)
+        }
 
-    init {
-        input.forEach {
-            if (!(MINIMUM_LOTTO_NUMBER..MAXIMUM_LOTTO_NUMBER).contains(it)) {
-                throw IllegalArgumentException("1부터 45까지의 숫자를 입력하세요")
+        fun ofManual(numbers: String): Lotto {
+            val splitted = numbers.trim().split(",").map { it.trim() }
+            require(splitted.distinct().size == LOTTO_NUMBER_COUNT) { "${LOTTO_NUMBER_COUNT}개의 서로 다른 숫자를 입력하세요" }
+
+            splitted.forEach { it ->
+                it.toIntOrNull() ?: throw IllegalArgumentException("올바른 숫자를 입력하세요 (입력 : $it)")
             }
+            return Lotto(splitted.map { it -> LottoNumber(it.toInt()) })
         }
     }
 
-    constructor() : this((MINIMUM_LOTTO_NUMBER..MAXIMUM_LOTTO_NUMBER).toList()
-        .shuffled()
-        .take(LOTTO_NUMBER_COUNT)
-    )
+    fun contains(number: LottoNumber): Boolean {
+        return this.numbers.contains(number)
+    }
 }
