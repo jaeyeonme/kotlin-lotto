@@ -5,9 +5,15 @@ import com.example.mylotto.model.LottoResult
 import com.example.mylotto.model.LottoTicket
 
 class ResultView {
-    fun displayPurchasedTickets(tickets: List<LottoTicket>) {
-        println("${tickets.size}개를 구매했습니다.")
-        tickets.forEach { ticket ->
+    fun displayPurchasedTickets(
+        manualTickets: List<LottoTicket>,
+        automaticTickets: List<LottoTicket>)
+    {
+        println("수동으로 ${manualTickets.size}, 자동으로 ${automaticTickets.size}개를 구매했습니다.")
+        manualTickets.forEach { ticket ->
+            println(ticket.numbers.joinToString(prefix = "[", postfix = "]") { it.number.toString() })
+        }
+        automaticTickets.forEach { ticket ->
             println(ticket.numbers.joinToString(prefix = "[", postfix = "]") { it.number.toString() })
         }
 
@@ -24,6 +30,12 @@ class ResultView {
             .sortedBy { it.winningMoney }
             .forEach { rank ->
                 val count = result.rankCountMap.getOrDefault(rank, 0)
+
+                if (rank == Rank.SECOND) {
+                    println("${rank.countOfMatch}개 일치, 보너스 볼 일치 (${rank.winningMoney}원)- ${count}개")
+                    return@forEach
+                }
+
                 println("${rank.countOfMatch}개 일치 (${rank.winningMoney}원)- ${count}개")
             }
 
