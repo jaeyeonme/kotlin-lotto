@@ -3,16 +3,19 @@ package lotto.domain
 class LottoMachine(
     private val numberGenerator: LottoNumberGenerator,
 ) {
-    fun purchase(amount: Int): LottoPurchase {
-        require(amount >= TICKET_PRICE) { "구입 금액은 로또 가격 이상이어야 합니다." }
-        require(amount % TICKET_PRICE == 0) { "구입 금액은 로또 가격 단위여야 합니다." }
-        val tickets = List(amount / TICKET_PRICE) { createTicket() }
-        return LottoPurchase(amount, tickets)
+    fun purchase(amount: Int): LottoPurchase = purchaseWithManualTickets(PurchaseAmount(amount), emptyList())
+
+    fun purchaseWithManualTickets(
+        purchaseAmount: PurchaseAmount,
+        manualTickets: List<LottoTicket>,
+    ): LottoPurchase {
+        val manualTicketCount = TicketCount(manualTickets.size)
+        val automaticTicketCount = purchaseAmount.ticketCount - manualTicketCount
+        val automaticTickets = createAutomaticTickets(automaticTicketCount)
+        return LottoPurchase(purchaseAmount, manualTickets, automaticTickets)
     }
+
+    private fun createAutomaticTickets(ticketCount: TicketCount): List<LottoTicket> = List(ticketCount.value) { createTicket() }
 
     private fun createTicket(): LottoTicket = LottoTicket.from(numberGenerator.generate())
-
-    companion object {
-        const val TICKET_PRICE = 1_000
-    }
 }

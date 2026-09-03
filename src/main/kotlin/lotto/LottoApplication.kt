@@ -10,11 +10,14 @@ import lotto.view.ResultView
 
 fun main() {
     val purchaseAmount = InputView.readPurchaseAmount()
-    val purchase = LottoMachine(RandomLottoNumberGenerator).purchase(purchaseAmount)
+    val manualTicketCount = InputView.readManualTicketCount(purchaseAmount.ticketCount)
+    val manualTickets = InputView.readManualTickets(manualTicketCount)
+    val purchase = LottoMachine(RandomLottoNumberGenerator).purchaseWithManualTickets(purchaseAmount, manualTickets)
     ResultView.printPurchase(purchase)
 
-    val winningNumbers = WinningNumbers.from(InputView.readWinningNumbers(), InputView.readBonusNumber())
-    val result = LottoResult.from(purchase.tickets, winningNumbers)
+    val winningNumbers = InputView.readWinningNumbers()
+    val winningNumbersWithBonus = WinningNumbers.from(winningNumbers, InputView.readBonusNumber(winningNumbers))
+    val result = LottoResult.from(purchase.tickets, winningNumbersWithBonus)
     val revenueRate = RevenueRateCalculator.calculate(result.totalPrize, purchase.amount)
     ResultView.printResult(result, revenueRate)
 }
