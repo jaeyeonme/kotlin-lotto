@@ -19,19 +19,21 @@ class LottoResultTest {
 
     @Test
     fun `당첨 결과의 총 당첨금을 계산한다`() {
-        val result = LottoResult.from(
-            winningTickets(),
-            WinningNumbers.from(listOf(1, 2, 3, 4, 5, 6)),
-        )
+        val result =
+            LottoResult.from(
+                winningTickets(),
+                WinningNumbers.from(listOf(1, 2, 3, 4, 5, 6)),
+            )
 
         assertThat(result.totalPrize).isEqualTo(2_001_555_000L)
     }
 
-    private fun winningTickets(): List<LottoTicket> = listOf(
-        LottoTicket.from(listOf(1, 2, 3, 10, 11, 12)),
-        LottoTicket.from(listOf(1, 2, 3, 4, 11, 12)),
-        LottoTicket.from(listOf(1, 2, 3, 4, 5, 12)),
-        LottoTicket.from(listOf(1, 2, 3, 4, 5, 6)),
-        LottoTicket.from(listOf(1, 2, 10, 11, 12, 13)),
-    )
+    private fun winningTickets(): List<LottoTicket> =
+        listOf(
+            LottoTicket.from(listOf(1, 2, 3, 10, 11, 12)),
+            LottoTicket.from(listOf(1, 2, 3, 4, 11, 12)),
+            LottoTicket.from(listOf(1, 2, 3, 4, 5, 12)),
+            LottoTicket.from(listOf(1, 2, 3, 4, 5, 6)),
+            LottoTicket.from(listOf(1, 2, 10, 11, 12, 13)),
+        )
 }
