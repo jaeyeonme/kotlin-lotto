@@ -8,6 +8,13 @@ class RevenueRateCalculatorTest {
     fun `총 당첨금과 구입 금액으로 수익률을 계산한다`() {
         val rate = RevenueRateCalculator.calculate(totalPrize = 5_000, purchaseAmount = 10_000)
 
-        assertThat(rate).isEqualTo(50.0)
+        assertThat(rate).isEqualTo(0.5)
+    }
+
+    @Test
+    fun `총 당첨금이 없으면 수익률은 0이다`() {
+        val rate = RevenueRateCalculator.calculate(totalPrize = 0, purchaseAmount = 10_000)
+
+        assertThat(rate).isEqualTo(0.0)
     }
 }
