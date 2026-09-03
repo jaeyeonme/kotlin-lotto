@@ -7,7 +7,7 @@ import java.util.Locale
 
 object ResultView {
     fun printPurchase(purchase: LottoPurchase) {
-        println("${purchase.tickets.size}개를 구매했습니다.")
+        println("수동으로 ${purchase.manualTicketCount.value}장, 자동으로 ${purchase.automaticTicketCount.value}개를 구매했습니다.")
         purchase.tickets.forEach { println(it.numbers) }
         println()
     }
