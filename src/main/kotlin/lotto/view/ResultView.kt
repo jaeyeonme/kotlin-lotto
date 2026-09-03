@@ -19,7 +19,7 @@ object ResultView {
         println("당첨 통계")
         println("---------")
         LottoRank.entries.forEach { printRank(it, result.count(it)) }
-        println("총 수익률은 ${formatRate(revenueRate)}%입니다.")
+        println("총 수익률은 ${formatRate(revenueRate)}입니다.")
     }
 
     private fun printRank(
