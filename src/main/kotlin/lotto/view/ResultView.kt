@@ -26,7 +26,7 @@ object ResultView {
         rank: LottoRank,
         count: Int,
     ) {
-        println("${rank.matchCount}개 일치 (${rank.prize}원)- ${count}개")
+        println("${rank.description} (${rank.prize}원)- ${count}개")
     }
 
     private fun formatRate(revenueRate: Double): String = String.format(Locale.US, "%.1f", revenueRate)
