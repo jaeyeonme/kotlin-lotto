@@ -28,6 +28,22 @@ class LottoResultTest {
         assertThat(result.totalPrize).isEqualTo(2_001_555_000L)
     }
 
+    @Test
+    fun `당첨 번호 5개 일치 결과를 보너스 번호로 2등과 3등으로 구분한다`() {
+        val tickets =
+            listOf(
+                LottoTicket.from(listOf(1, 2, 3, 4, 5, 7)),
+                LottoTicket.from(listOf(1, 2, 3, 4, 5, 8)),
+            )
+        val winningNumbers = WinningNumbers.from(listOf(1, 2, 3, 4, 5, 6), bonusNumber = 7)
+
+        val result = LottoResult.from(tickets, winningNumbers)
+
+        assertThat(result.count(LottoRank.FIVE_MATCHES_WITH_BONUS)).isEqualTo(1)
+        assertThat(result.count(LottoRank.FIVE_MATCHES)).isEqualTo(1)
+        assertThat(result.totalPrize).isEqualTo(31_500_000L)
+    }
+
     private fun winningTickets(): List<LottoTicket> =
         listOf(
             LottoTicket.from(listOf(1, 2, 3, 10, 11, 12)),
