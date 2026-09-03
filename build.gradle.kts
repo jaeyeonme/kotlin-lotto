@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     kotlin("jvm") version "2.4.10"
-    id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
+    id("org.jmailen.kotlinter") version "5.7.0"
 }
 
 group = "camp.nextstep.edu"
@@ -15,7 +15,7 @@ repositories {
 dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
     testImplementation("org.assertj:assertj-core:3.22.0")
-    testImplementation("io.kotest:kotest-runner-junit5:5.2.3")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.8.2")
 }
 
 kotlin {
@@ -29,7 +29,14 @@ tasks {
     test {
         useJUnitPlatform()
     }
-    ktlint {
-        verbose.set(true)
+    register("ktlintCheck") {
+        group = "verification"
+        description = "Runs ktlint on all Kotlin sources."
+        dependsOn("lintKotlin")
     }
+}
+
+kotlinter {
+    ktlintVersion = "1.8.0"
+    reporters = arrayOf("plain")
 }
