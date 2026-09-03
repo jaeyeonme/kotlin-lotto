@@ -13,7 +13,7 @@ fun main() {
     val purchase = LottoMachine(RandomLottoNumberGenerator).purchase(purchaseAmount)
     ResultView.printPurchase(purchase)
 
-    val winningNumbers = WinningNumbers.from(InputView.readWinningNumbers())
+    val winningNumbers = WinningNumbers.from(InputView.readWinningNumbers(), InputView.readBonusNumber())
     val result = LottoResult.from(purchase.tickets, winningNumbers)
     val revenueRate = RevenueRateCalculator.calculate(result.totalPrize, purchase.amount)
     ResultView.printResult(result, revenueRate)

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 class LottoResultTest {
     @Test
     fun `일치 개수별 당첨 티켓 수를 집계한다`() {
-        val winningNumbers = WinningNumbers.from(listOf(1, 2, 3, 4, 5, 6))
+        val winningNumbers = WinningNumbers.from(listOf(1, 2, 3, 4, 5, 6), bonusNumber = 7)
         val tickets = winningTickets()
 
         val result = LottoResult.from(tickets, winningNumbers)
@@ -22,7 +22,7 @@ class LottoResultTest {
         val result =
             LottoResult.from(
                 winningTickets(),
-                WinningNumbers.from(listOf(1, 2, 3, 4, 5, 6)),
+                WinningNumbers.from(listOf(1, 2, 3, 4, 5, 6), bonusNumber = 7),
             )
 
         assertThat(result.totalPrize).isEqualTo(2_001_555_000L)

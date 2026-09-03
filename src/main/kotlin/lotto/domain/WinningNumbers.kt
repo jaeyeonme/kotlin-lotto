@@ -2,7 +2,7 @@ package lotto.domain
 
 class WinningNumbers private constructor(
     private val lottoNumbers: LottoNumbers,
-    private val bonusNumber: Int?,
+    private val bonusNumber: Int,
 ) {
     internal fun contains(number: Int): Boolean = number in lottoNumbers.values
 
@@ -10,8 +10,6 @@ class WinningNumbers private constructor(
 
     companion object {
         private val RANGE = 1..45
-
-        fun from(numbers: Collection<Int>): WinningNumbers = WinningNumbers(LottoNumbers.from(numbers), null)
 
         fun from(
             numbers: Collection<Int>,
