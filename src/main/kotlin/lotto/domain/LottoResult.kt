@@ -14,8 +14,17 @@ class LottoResult private constructor(
             tickets: List<LottoTicket>,
             winningNumbers: WinningNumbers,
         ): LottoResult {
-            val ranks = tickets.mapNotNull { ticket -> LottoRank.from(ticket.matchCount(winningNumbers)) }
+            val ranks = tickets.mapNotNull { ticket -> findRank(ticket, winningNumbers) }
             return LottoResult(ranks.groupingBy { it }.eachCount())
+        }
+
+        private fun findRank(
+            ticket: LottoTicket,
+            winningNumbers: WinningNumbers,
+        ): LottoRank? {
+            val matchCount = ticket.matchCount(winningNumbers)
+            val matchesBonus = ticket.numbers.any(winningNumbers::matchesBonus)
+            return LottoRank.from(matchCount, matchesBonus)
         }
     }
 }
