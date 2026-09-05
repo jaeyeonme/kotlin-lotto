@@ -36,12 +36,12 @@ class StringAddCalculatorTest {
     @Test
     fun `음수가 포함되면 예외가 발생한다`() {
         assertThatThrownBy { StringAddCalculator.add("-1,2,3") }
-            .isInstanceOf(RuntimeException::class.java)
+            .isInstanceOf(IllegalArgumentException::class.java)
     }
 
     @Test
     fun `숫자가 아닌 값이 포함되면 예외가 발생한다`() {
         assertThatThrownBy { StringAddCalculator.add("1,a,3") }
-            .isInstanceOf(RuntimeException::class.java)
+            .isInstanceOf(IllegalArgumentException::class.java)
     }
 }
