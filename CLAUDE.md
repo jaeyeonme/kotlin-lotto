@@ -7,7 +7,6 @@
 - 전체 검증: `./gradlew clean build ktlintCheck` (JDK 25, Kotlin 2.4.10)
 - 테스트만: `./gradlew test`
 - 실행 task가 없다(`application` 플러그인 없음). IDE에서 `src/main/kotlin/lotto/LottoApplication.kt`의 `main`을 실행한다.
-- 코틀린 파일을 고치면 `.claude/hooks/ktlint-check.sh`가 `ktlintCheck`를 실행한다. 실패하면 위반 줄을 바로 고친다.
 
 ## 코드 구성
 
